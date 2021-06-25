@@ -10,6 +10,8 @@ class MyStrategy(bt.Strategy):#继承bt.Strategy类
         self.bt_sma = bt.indicators.MovingAverageSimple(self.data, period = 24) #赋值给this.bt_sma(随便起名字),plot()函数会自动标出移动平均线
         #默认画30days均线, 可以指定period参数更改天数
         #在指标还不能计算，即未形成时（30天移动均线的前29天）会调用prenext
+        self.buy_sell_signal = bt.indicators.CrossOver(self.data.close, self.bt_sma)#两个值如果上传，则return 1，下穿return -1，else return 0
+        #self.buy_sell_signal本质上还是indicator，即一个line
 
     def start(self):
         print("start")
@@ -21,13 +23,20 @@ class MyStrategy(bt.Strategy):#继承bt.Strategy类
         ma_value = self.bt_sma[0];#获取当日移动均线价格
         ma_value_yesterday = self.bt_sma[-1]#之前的判断代码有问题，修正
 
-        if self.data.close[0] > ma_value and self.data.close[-1] < ma_value_yesterday:#今天高于&昨天低于5日均价，则买入
-            print('long', self.data.datetime.date(), self.data.close[0])#获取当日日期用.datetime
-            self.order = self.buy(size = 100)#执行买入，买入10000手
+        # if self.data.close[0] > ma_value and self.data.close[-1] < ma_value_yesterday:#今天高于&昨天低于5日均价，则买入
+        #     print('long', self.data.datetime.date(), self.data.close[0])#获取当日日期用.datetime
+        #     self.order = self.buy(size = 100)#执行买入，买入10000手
+        #
+        # if self.data.close[0] < ma_value and self.data.close[-1] > ma_value_yesterday:#今天低于&昨天高于5日均价
+        #     print('short', self.data.datetime.date(), self.data.close[0])#获取当日日期用.datetime
+        #     self.order = self.sell(size = 100)
 
-        if self.data.close[0] < ma_value and self.data.close[-1] > ma_value_yesterday:#今天低于&昨天高于5日均价
-            print('short', self.data.datetime.date(), self.data.close[0])#获取当日日期用.datetime
+        #没必要用以上的代码
+        if self.buy_sell_signal[0] == 1:
+            self.order = self.buy(size = 100)
+        elif self.buy_sell_signal[0] == -1:
             self.order = self.sell(size = 100)
+
 
 
 
