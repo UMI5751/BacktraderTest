@@ -7,7 +7,23 @@ from backtrader import cerebro
 
 
 class MyStrategy(bt.Strategy):#继承bt.Strategy类
-    pass
+    def __init__(self):
+        print("init")
+
+    def start(self):
+        print("start")
+
+    def prenext(self):
+        print("prenext")
+
+    def next(self):
+        print("next")
+
+    def stop(self):
+        print("stop")
+
+
+
 
 cerebro = bt.Cerebro()
 
@@ -25,22 +41,6 @@ data0 = data0.rename(columns={'closePrice' : 'close'})
 brf_daily = bt.feeds.PandasData(dataname = data0, fromdate = datetime.datetime(2020, 9, 16), todate = datetime.datetime(2021, 6, 25))
 #fromdate回测起始时间
 
-#另一种读取data的方式
-brf_daily1 = bt.feeds.GenericCSVData(
-    dataname = r'C:\Users\Admin\Documents\Programming\BacktraderTest\priceData.csv',
-    fromdate = datetime.datetime(2020, 9, 16),#注释掉这两行则默认选全部时间段
-    todate = datetime.datetime(2021, 6, 25),
-    nullvalue = 0.0, #nullvalue填0
-    dtformat = ('%Y/%m/%d'),#或%Y-%m-%d
-    datatime = 0,#以下在第几列需要根据实际数据列信息调整
-    high = 2,#指定列数
-    low = 3,
-    open = 1,
-    close = 4,
-    volume = 5,
-    openinterest = -1#表示不存在这一列
-)
-
 #add data feed to cerebro
 cerebro.adddata(brf_daily)
 
@@ -51,5 +51,6 @@ cerebro.addstrategy(MyStrategy)
 cerebro.run()
 
 #plot
-cerebro.plot()
+#cerebro.plot()
+cerebro.plot(style = 'candle')#画成蜡烛图
 
