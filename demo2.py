@@ -13,11 +13,12 @@ class MyStrategy(bt.Strategy):#继承bt.Strategy类
     def start(self):
         print("start")
 
-    def prenext(self):
+    def prenext(self):#目前暂时没有
         print("prenext")
 
-    def next(self):
-        print("next")
+    def next(self):#next的策略核心，如果是分钟线，每过1分钟调用一次，日线则每过一天调用一次，取决于数据间隔
+        print(self.data.close[0]);
+        #self.data就是被feed的data，.close就是close列，[0]可以防止未来函数，表示当前时间点，-1表示昨天/上一分钟，[1]表示明天
 
     def stop(self):
         print("stop")
