@@ -33,17 +33,17 @@ class MyStrategy(bt.Strategy):#继承bt.Strategy类
 
         #没必要用以上的代码
         if not self.position and self.buy_sell_signal[0] == 1:#如果没有仓位（空仓）且向上突破均线
-            self.order = self.buy()
+            self.order = self.buy(size = 20)
         if not self.position and self.buy_sell_signal[0] == -1:
-            self.order = self.sell()
+            self.order = self.sell(size = 20)
 
         if self.position and self.buy_sell_signal[0] == 1:#self.position 会返回bool值
             self.order = self.close()#上穿均线了，如果之前有仓位（必定是空仓），则把之前的仓位先平掉，再开仓做多
-            self.order = self.buy()
+            self.order = self.buy(size = 20)
 
         if self.position and self.buy_sell_signal[0] == -1:
             self.order = self.close()
-            self.order = self.sell()
+            self.order = self.sell(size = 20)
 
 
 
