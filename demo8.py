@@ -1,3 +1,4 @@
+#策略优化器
 from __future__ import (absolute_import, division, print_function, unicode_literals)#向前兼容python2
 
 import backtrader as bt
@@ -70,7 +71,7 @@ class t_s(bt.Strategy):#继承bt.Strategy类
 cerebro = bt.Cerebro()
 
 data0 = pd.read_csv('priceDataMin.csv')
-data0.dropna() 
+data0.dropna()
 #create data feed
 data0['time'] = pd.to_datetime(data0['time'])#必须转成时间戳格式
 data0.set_index('time', inplace=True)
@@ -88,6 +89,14 @@ cerebro.resampledata(brf_min, timeframe = bt.TimeFrame.Days)
 
 #add strategy
 cerebro.addstrategy(t_s)
+
+#策略优化器，里面放可迭代对象
+cerebro.optstrategy(
+    t_s,
+    period = range(1, 5),
+    k_u = [n / 10.0 for n in range(2, 10)],
+    k_d = [n/ 10.0 for n in range(2, 10)]
+)
 
 #run
 cerebro.run()

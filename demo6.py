@@ -9,10 +9,11 @@ class three_bars(bt.Indicator):#继承Indicator不是indicators或indicator
     lines = ('up', 'down')
 
     def __init__(self):
-        self.addminperiod(4)
+        self.addminperiod(4)#最小周期4天，4天才能生成指标
         self.plotinfo.plotmaster = self.data#plotmaster表示和主图话画在一起，注释掉之后会分开画
 
     def next(self):
+        #ago = -1表示从昨天开始算，取3天的数据（size = 3）
         self.lines[0][0] = max(max(self.data.close.get(ago = -1, size = 3)), max(self.data.open.get(ago = -1, size = 3)))
         self.lines.down[0] = min(min(self.data.close.get(ago = -1, size = 3)), min(self.data.open.get(ago = -1, size = 3)))
 
