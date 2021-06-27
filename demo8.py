@@ -66,7 +66,7 @@ class t_s(bt.Strategy):#继承bt.Strategy类
 
     def stop(self):
         print('period: %s, k_u: %s, k_d: %s, final_value: %.2f' %
-              (self.p.period, self.p.k_u, self.p.k_d, self.broker.getvalue())) #获取优化后的参数
+              (self.p.period, self.p.k_u, self.p.k_d, self.broker.getvalue())) #获取优化后的参数,broker.getvalue获取净值
 
 
 if __name__ == '__main__':
@@ -75,6 +75,7 @@ if __name__ == '__main__':
 
     data0 = pd.read_csv('priceDataMin.csv')
     data0.dropna()
+
     #create data feed
     data0['time'] = pd.to_datetime(data0['time'])#必须转成时间戳格式
     data0.set_index('time', inplace=True)
@@ -83,8 +84,7 @@ if __name__ == '__main__':
     brf_min = bt.feeds.PandasData(dataname = data0,
                                     fromdate = datetime.datetime(2021, 6, 1),
                                     todate = datetime.datetime(2021, 6, 25),
-                                    timeframe = bt.TimeFrame.Minutes)#告诉bt是分钟级数据
-    #fromdate回测起始时间
+                                    timeframe = bt.TimeFrame.Minutes)
 
     #add data feed to cerebro
     cerebro.adddata(brf_min)
@@ -107,4 +107,5 @@ if __name__ == '__main__':
     #plot
     #cerebro.plot()
     #cerebro.plot(style = 'candle')
+
 
