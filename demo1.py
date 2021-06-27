@@ -3,7 +3,6 @@ from __future__ import (absolute_import, division, print_function, unicode_liter
 import backtrader as bt
 import datetime
 import pandas as pd
-from backtrader import cerebro
 
 
 class MyStrategy(bt.Strategy):#继承bt.Strategy类
@@ -11,7 +10,7 @@ class MyStrategy(bt.Strategy):#继承bt.Strategy类
 
 cerebro = bt.Cerebro()
 
-data0 = pd.read_csv(r'C:\Users\Admin\Documents\Programming\BacktraderTest\priceData.csv')
+data0 = pd.read_csv('priceData.csv')
 
 #create data feed
 data0['tradeDate'] = pd.to_datetime(data0['tradeDate'])#必须转成时间戳格式
