@@ -1,0 +1,20 @@
+import pandas as pd
+nsdk = pd.read_csv('NASDAQ_processed.csv')
+nikkei = pd.read_csv('Nikkei_processed.csv')
+szzs = pd.read_csv('SZZS_processed.csv')
+szqz = pd.read_csv('SZQZ_processed.csv')
+
+summary_df1 = pd.merge(nsdk, nikkei, on = ['Date'], how = 'outer')
+summary_df2 = pd.merge(szzs, szqz, on = ['Date'], how = 'outer')
+summary_df1['Date'] = pd.to_datetime(summary_df1['Date'])
+summary_df2['Date'] = pd.to_datetime(summary_df2['Date'])
+summary_df = pd.merge(summary_df1, summary_df2, on = ['Date'], how = 'outer')
+summary_df['Date'] = pd.to_datetime(summary_df['Date'])
+
+summary_df.sort_values('Date', inplace=True)
+summary_df.rename(columns={'Close_x' : 'NASDAQ', 'Close_y' : 'Nikkei', 'close_x' : 'SZZS',  'close_y' : 'SZQZ'}, inplace = True)
+summary_df = summary_df.fillna(method = 'ffill')
+summary_df = summary_df.fillna(value = 1)
+summary_df['Date'] = pd.to_datetime(summary_df['Date'])
+summary_df = summary_df.set_index('Date')
+summary_df.plot(figsize = (10, 10))

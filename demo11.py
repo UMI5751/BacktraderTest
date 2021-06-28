@@ -96,17 +96,25 @@ if __name__ == '__main__':
 
     cerebro.addanalyzer(bt.analyzers.DrawDown)
     cerebro.addanalyzer(bt.analyzers.TradeAnalyzer)
+    cerebro.addanalyzer(bt.analyzers.SharpeRatio)
+    cerebro.addanalyzer(bt.analyzers.Transactions)
 
     cerebro.addwriter(bt.WriterFile, csv = True, out = 'result.csv')
 
     #run
-    cerebro.run()
-    pos = cerebro.broker.getposition(brf_daily)#传入brfdaily对象， pos是一个对象，里面有两个参数
-    print('size', pos.size)
-    print('price', pos.price)
 
-    print('value', cerebro.broker.get_value())
-    print('cash', cerebro.broker.getcash())
+    res = cerebro.run()[0] #会返回分析结果,如果有两个策略，则分开分析
+
+    pyfolio = res.analyzers.getbyname('pyfolio')#获取pyfolio的分析结果，包括交易，杠杆率信息
+    returns, positions, transactions, gross_lev = pyfolio.get_pf_.items()
+
+    returns.to_hdf('return.h5', key = 'data')
+    positions.to_hdf('positions.h5', key='data')
+    transactions.to_hdf('transactions.h5', key='data')
+
+    print('DrawDown', res.analyzers.drawdown.get_analysis()) #打印drawdown结果，返回一个dict类型
+    #print('max drawdown %s %%' % res['max']['drawdown'])
+    print('TradeAnalyzer', res.analyzers.tradeanalyzer.get_analysis())#获取analyzer中traderanalyzer的结果
 
 
     #plot
