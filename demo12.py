@@ -89,6 +89,8 @@ if __name__ == '__main__':
 
     # futures mode
     cerebro.broker.setcommission(commission=2.0, margin=2000, mult=10, name='brf')
+    #share mode, 根据内部参数自动确定是期货还是股票，股票按百分比收手续费，期货按固定金额收，
+    cerebro.broker.setcommission(commission = 0.0003, name='brf')
     cerebro.broker.set_slippage_perc(perc=0.0005)
     cerebro.broker.set_filler(bt.broker.fillers.FixedBarPerc(perc=0.1))  # 设置每根bar最多只能成交这根bar的1/10，剩余的分散交易到后面的bar上
     # cerebro.broker.set_filler(bt.broker.fillers.FixedSize(size = 1))固定每根bar只能成交1手
